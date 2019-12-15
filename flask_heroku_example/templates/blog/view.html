@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1></h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+      <style type="text/css">
+        p::selection {
+                 background: blue;
+        }
+        h1::selection {
+                 background: blue;
+        }
+        h2::selection {
+                 background: blue;
+        }
+        h3::selection {
+                 background: blue;
+        }
+        strong::selection {
+                 background: blue;
+        }
+        .center-fit {
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+        }
+      </style>
+       <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+          integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+          crossorigin=""></script>
+      <style>
+        #postName:hover {
+          color: purple;
+        } 
+      </style>
+       <br>
+       </br>
+       <center>
+       <p>                                                              </p>
+       <p>                                                                         </p>
+       <br>
+       {% if "19.19 19.19" in post[3] %}
+          <script type="text/javascript">
+            $("#mapid").hide();
+          </script>
+       {% else %}
+          <div id="mapid" style="width: 600px; height: 400px;"></div>
+       {% endif %}
+       <h4 id="coords">{{ post[3] }}</h6>
+       <p id="address">{{ post[3] }}</p>
+       <br>
+       <br>
+       <a id="link" style="color: blue; font-size: 15px;"></a>
+       <br>
+       </br>
+       </center>
+       <div class="container">
+           <center><a class="post-meta" id="postName" style="font-size: 22px;"><strong>{{ post[1] }}</strong></a></center>
+           <center><p>Post #{{ post[9] }}</p></center>
+       <center>
+           <p>{{ post[4] }}</p></br>
+           <p class="post-meta">Skills required: {{ post[5] }}</p>
+           <br>
+           <p class="post-meta">Hardware: {{ post[6] }}</p>
+           <br>
+           <p class="post-meta">Attempted solutions: {{ post[7] }}</p>
+           <br>
+           <p class="post-meta">Based out of: {{ user[4] }}</p>
+           <a class="btn btn-primary btn-round" href="{{ url_for('update2', id=post[0]) }}" style="font-size: 12px;">Reach out</a>
+           <br></br>
+           <br></br>
+           <br></br>
+           <br></br>
+           <img class="center-fit" src="{{ post[8] }}">
+       </div>
+       </center>
+       <script>
+        function gp_signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                var j = confirm("Do you want to log out?");
+                if (j == true) {
+                  window.location.replace("https://collabora8e.herokuapp.com/logout")
+                }
+            });
+        }
+    function onLoad() {
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
+    }
+           var apikey = '9bb69a99f20d41e098f2c07333726f6b';
+           var str = $("#coords").text();
+           var address = $("#address").text();
+           $("#address").hide();
+           res = str.split(" ");
+           add = address.split(", ");
+           var var1 = Number(res[0])
+           var var2 = Number(res[1])
+           $("#link").html("Github repo: " + res[2]);
+           $("#coords").hide();
+           $("#link").click(function(){
+               window.location.replace(res[2])
+           });
+           var mymap = L.map('mapid').setView([var1, var2], 10);
+           L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamFkZW5iaDEyIiwiYSI6ImNrMm1yMnhlMjBrdmczbW05MTh2bTMyZWwifQ._0dwaxvbZmd-fDtzQxoIhQ', {
+             maxZoom: 18,
+             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+               '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+               'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+             id: 'mapbox.streets'
+           }).addTo(mymap);
+           if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(showPosition,showError);
+           } else {
+             console.log("Geolocation is not supported by this browser.");
+           }
+          function showError(error) {
+             var delayInMilliseconds = 100; //1 second
+
+             setTimeout(function() {
+                switch(error.code) {
+                  case error.PERMISSION_DENIED:
+                    $("#mapid").hide();
+                  case error.POSITION_UNAVAILABLE:
+                    $("#mapid").hide();
+                  case error.TIMEOUT:
+                    $("#mapid").hide();
+                  case error.UNKNOWN_ERROR:
+                    $("#mapid").hide();
+                }
+               
+              //your code to be executed after 1 second
+             }, delayInMilliseconds);
+          }
+        function showPosition(position) {
+              var la = position.coords.latitude;
+              var lo = position.coords.longitude;
+              var a = la.toString();
+              var b = lo.toString();
+              var latitude = a;
+              var longitude = b;
+              var api_url = 'https://api.opencagedata.com/geocode/v1/json'
+              var request_url = api_url
+                + '?'
+                + 'key=' + apikey
+                + '&q=' + encodeURIComponent(latitude + ',' + longitude)
+                + '&pretty=1'
+                + '&no_annotations=1';
+              // see full list of required and optional parameters:
+              // https://opencagedata.com/api#forward
+              var request = new XMLHttpRequest();
+              request.open('GET', request_url, true);
+              request.onload = function() {
+                // see full list of possible response codes:
+                // https://opencagedata.com/api#codes
+                if (request.status == 200){ 
+                  // Success!
+                  var data = JSON.parse(request.responseText);
+                  L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
+                          .bindPopup("Your position: " + data.results[0].formatted).openPopup();
+                } else if (request.status <= 500){ 
+                  // We reached our target server, but it returned an error
+                                       
+                  console.log("unable to geocode! Response code: " + request.status);
+                  var data = JSON.parse(request.responseText);
+                  console.log(data.status.message);
+                } else {
+                  console.log("server error");
+                }
+              };
+              request.onerror = function() {
+                // There was a connection error of some sort
+                console.log("unable to connect to server");        
+              };
+              request.send();  // make the request
+              var request_url2 = api_url
+                + '?'
+                + 'key=' + apikey
+                + '&q=' + encodeURIComponent(var1 + ',' + var2)
+                + '&pretty=1'
+                + '&no_annotations=1';
+              // see full list of required and optional parameters:
+              // https://opencagedata.com/api#forward
+              var request2 = new XMLHttpRequest();
+              request2.open('GET', request_url2, true);
+              request2.onload = function() {
+                // see full list of possible response codes:
+                // https://opencagedata.com/api#codes
+                if (request2.status == 200){ 
+                  // Success!
+                  var data2 = JSON.parse(request2.responseText);
+                  L.marker([var1, var2]).addTo(mymap)
+                          .bindPopup("Their position: " + data2.results[0].formatted).openPopup();
+                } else if (request2.status <= 500){ 
+                  // We reached our target server, but it returned an error
+                                       
+                  console.log("unable to geocode! Response code: " + request2.status);
+                  var data2 = JSON.parse(request2.responseText);
+                  console.log(data2.status.message);
+                } else {
+                  console.log("server error");
+                }
+              };
+              request2.onerror = function() {
+                // There was a connection error of some sort
+                console.log("unable to connect to server");        
+              };
+              request2.send();                             
+        }
+       </script>
+     </form>
+  <hr>
+  <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+{% endblock %}

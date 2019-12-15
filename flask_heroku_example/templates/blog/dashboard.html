@@ -1,0 +1,726 @@
+{% extends 'base.html' %}
+{% block header %}
+ <h1></h1>
+{% endblock %}
+{% block content %}
+      <div class="wrapper ">
+        <style type="text/css">
+          #email::selection {
+            background: blue;
+          }
+          #password1::selection {
+            background: blue;
+          }
+          #password2::selection {
+            background: blue;
+          }
+          #focus::selection {
+            background: blue;
+          }
+          .nav-item .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+          }
+        </style>
+        <style type="text/css">
+          p::selection {
+                   background: blue;
+        }
+          h1::selection {
+                   background: blue;
+        }
+          h2::selection {
+                   background: blue;
+        }
+          h3::selection {
+                   background: blue;
+        }
+          strong::selection {
+                   background: blue;
+        }
+          input::selection {
+                   background: blue;
+        }
+          label::selection {
+                   background: blue;
+        }
+        </style>
+        <div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
+          <!--
+            Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+            Tip 2: you can also add an image using data-image tag
+        -->
+          <div class="logo">
+            <h1>                                    </h1></br>
+            <h1>                                    </h1></br>
+            <h1>                                    </h1></br>
+            <h4>                                    </h4></br>
+            <a class="simple-text logo-normal">
+              Dashboard
+            </a>
+          </div>
+          <div class="sidebar-wrapper">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" id="btn1">
+                  <p>Posts</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="btn2">
+                  <p>Messages</p>
+                  <span id="notify" class="badge"></span>
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" id="btn3">
+                  <p>Sent messages</p>
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" id="btn4">
+                  <p>Edit profile</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+          <script type="text/javascript">
+            var q = 0;
+            function functionres() {
+              q += 1;
+              console.log(q);
+              document.getElementById("notify").innerHTML = q;
+            }
+          </script>
+          <button style="display: none;"id="dist" onclick="functionres()"></button>
+          {% for message in messages %}
+              {% if message[2] == g.cuser[0] %}
+                  <script type="text/javascript">
+                    document.getElementById("dist").click();
+                  </script>
+              {% endif %}
+          {% endfor %}
+        <div class="main-panel">
+          <!-- Navbar -->
+          <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+            <div class="container-fluid">
+              <div class="navbar-wrapper">
+                <a class="navbar-brand" href="#pablo">User Profile</a>
+              </div>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+              </button>
+              <div class="collapse navbar-collapse justify-content-end">
+                <form class="navbar-form">
+                  <div class="input-group no-border">
+                  </div>
+                </form>
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#pablo">
+                      <i class="material-icons">dashboard</i>
+                      <p class="d-lg-none d-md-block">
+                        Stats
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="material-icons">notifications</i>
+                      <span class="notification">5</span>
+                      <p class="d-lg-none d-md-block">
+                        Some Actions
+                      </p>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="#">Mike John responded to your email</a>
+                      <a class="dropdown-item" href="#">You have 5 new tasks</a>
+                      <a class="dropdown-item" href="#">You're now friend with Andrew</a>
+                      <a class="dropdown-item" href="#">Another Notification</a>
+                      <a class="dropdown-item" href="#">Another One</a>
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="material-icons">person</i>
+                      <p class="d-lg-none d-md-block">
+                        Account
+                      </p>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
+                      <a class="dropdown-item" href="#">Profile</a>
+                      <a class="dropdown-item" href="#">Settings</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Log out</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <!-- End Navbar -->
+          <div class="content">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-8" id="postDiv">
+                  <div class="card">
+                    <div class="card-header card-header-primary">
+                      <h4 class="card-title">Projects</h4>
+                    </div>
+                    <div class="card-body">
+                           <ul class="list-group list-group-flush">
+                             {% for country in posts %}
+                               {% if country[0] == g.cuser[5] %}
+                                   <a>
+                                       <li class="list-group-item">
+                                           <div class="row align-items-center no-gutters">
+                                               <div class="col mr-2">
+                                                   <h6 style="font-size: 20px;" class="mb-0"><strong>{{ country[2] }}</strong></h6><span style="font-size: 15px;"class="text-xs">{{ country[4] }}</span>
+                                                 </div>
+                                           </div>
+                                          <p>                                          </p>
+                                          <a style="font-size: 14px;" id="deleteBtn" href="{{ url_for('delete', title=country[2]) }}"><strong>Delete</strong></a>
+                                       </li>
+                                   </a>
+                               {% endif %}
+                             {% endfor %}
+                           </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-8" id="msgDiv1">
+                  <div class="card">
+                    <div class="card-header card-header-primary">
+                      <h4 class="card-title">Messages</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead class=" text-primary">
+                            <th>
+                              <p style="font-size: 18px;">Username</p>
+                            </th>
+                            <th>
+                              <p style="font-size: 18px;">Message</p>
+                            </th>
+                          </thead>
+                          <tbody>
+                          {% for message in messages %}
+                             {% if message[2] == g.cuser[0] %}
+                               <tr>
+                                 <td>
+                                   <p style="font-size: 15px;">{{ message[1] }}</p>
+                                 </td>
+                                 <td>
+                                   <p style="font-size: 15px;">{{ message[3] }}</p>
+                                 </td>
+                                 <td class="text-primary">
+                                   <a style="font-size: 15px;" href="{{ url_for('update2', id=message[0]) }}">Reply</a>
+                                 </td>
+                                 {% if g.cuser[0] == "jadenbh12" %}
+                                   <td class="text-primary">
+                                      <a style="font-size: 15px;" href="{{ url_for('deleteMessage', id=message[4]) }}">Delete</a>
+                                   </td>
+                                 {% endif %}
+                               </tr>
+                             {% endif %}
+                           {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-8" id="msgDiv2">
+                  <div class="card">
+                    <div class="card-header card-header-primary">
+                      <h4 class="card-title">Sent messages</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead class=" text-primary">
+                            <th>
+                              <p style="font-size: 18px;">Recipient</p>
+                            </th>
+                            <th>
+                              <p style="font-size: 18px;">Message</p>
+                            </th>
+                          </thead>
+                          <tbody>
+                            {% for message in messages %}
+                              {% if message[0] == g.cuser[5] %}
+                                <tr>
+                                  <td>
+                                    <p style="font-size: 15px;">{{ message[2] }}</p>
+                                  </td>
+                                  <td>
+                                    <p style="font-size: 15px;">{{ message[3] }}</p>
+                                  </td>
+                                  <td class="text-primary">
+                                    <a style="font-size: 15px;" href="{{ url_for('update2', id=message[0]) }}">Follow up</a>
+                                  </td>
+                                  <td class="text-primary">
+                                    <a style="font-size: 15px;" href="{{ url_for('deleteMessage', id=message[4]) }}">Delete</a>
+                                  </td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            <div class="col-md-8" id="editCard">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">{{ g.cuser[0] }}</h4>
+                  <p class="card-category">Edit your profile</p>
+                </div>
+                <div class="card-body">
+                  <form method="post" autocomplete="off">
+                    <div class="autocomplete">
+
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="bmd-label-floating">Email</label>
+                            <input name="email" id="email" type="email" class="form-control" value="{{ g.cuser[3] }}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="bmd-label-floating">New password</label>
+                            <input name="password2" id="password2"type="password" class="form-control">
+                          </div>
+                        </div></br>
+                        <br>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="bmd-label-floating">Area of expertise</label>
+                            <input name="focus" id="focus"type="text" class="form-control" value="{{ g.cuser[2] }}">
+                          </div>
+                        </div>
+                        <div class="col-md-6" >
+                          <div class="form-group">
+                            <label class="bmd-label-floating">Old password</label>
+                            <input name="password1" id="password1"type="password" class="form-control" required>
+                          </div>
+                        </div>
+                        <p id="blueh" style="display: none;">{{ (g.cuser[4].split(" ; "))[0] }}</p>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="bmd-label-floating">City</label>
+                            <input name="city" id="city"type="text" class="form-control" ></input>
+                          </div>
+                        </div>
+                        <script type="text/javascript">
+                          var xz = document.getElementById("blueh").innerHTML;
+                          $("#city:text").val(xz);
+                        </script>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <input type="checkbox" onclick="myFunction()" style="size: 30px; color: black; font-size: 40px; border:2px dotted #00f;"> Show Passwords</input>
+                          </div>
+                        </div>
+                      </div>
+                    <button type="submit" class="btn btn-primary pull-right" style="font-size: 12px;">Update Profile</button>
+                    <div class="clearfix"></div>
+                   </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fixed-plugin">
+        <div class="dropdown show-dropdown">
+          <a href="#" data-toggle="dropdown">
+            <i class="fa fa-cog fa-2x"> </i>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="header-title"> Sidebar Filters</li>
+            <li class="adjustments-line">
+              <a href="javascript:void(0)" class="switch-trigger active-color">
+                <div class="badge-colors ml-auto mr-auto">
+                  <span class="badge filter badge-purple" data-color="purple"></span>
+                  <span class="badge filter badge-azure" data-color="azure"></span>
+                  <span class="badge filter badge-green" data-color="green"></span>
+                  <span class="badge filter badge-warning" data-color="orange"></span>
+                  <span class="badge filter badge-danger" data-color="danger"></span>
+                  <span class="badge filter badge-rose active" data-color="rose"></span>
+                </div>
+                <div class="clearfix"></div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+  <script>
+        function gp_signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                var j = confirm("Do you want to log out?");
+                if (j == true) {
+                  window.location.replace("https://collabora8e.herokuapp.com/logout")
+                }
+            });
+        }
+    function onLoad() {
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
+    }
+    function myFunction() {
+      var x = document.getElementById("password1");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+      var y = document.getElementById("password2");
+      if (y.type === "password") {
+        y.type = "text";
+      } else {
+        y.type = "password";
+      }
+    }
+    $("#msgDiv1").hide();
+    $("#msgDiv2").hide();
+    $("#editCard").hide();
+    $("#btn1").parent().addClass('active');
+    $("#btn1").click(function() {
+      $("#postDiv").show();
+      $("#msgDiv1").hide();
+      $("#msgDiv2").hide();
+      $("#editCard").hide();
+      $(this).parent().addClass('active');
+      $("#btn2").parent().removeClass('active');
+      $("#btn3").parent().removeClass('active');
+      $("#btn4").parent().removeClass('active');
+    });
+    $("#btn2").click(function() {
+      $("#msgDiv1").show();
+      $("#msgDiv2").hide();
+      $("#postDiv").hide();
+      $("#editCard").hide();
+      $(this).parent().addClass('active');
+      $("#btn1").parent().removeClass('active');
+      $("#btn3").parent().removeClass('active');
+      $("#btn4").parent().removeClass('active');
+    });
+    $("#btn3").click(function() {
+      $("#msgDiv2").show();
+      $("#msgDiv1").hide();
+      $("#postDiv").hide();
+      $("#editCard").hide();
+      $("#notify").hide();
+      $(this).parent().addClass('active');
+      $("#btn2").parent().removeClass('active');
+      $("#btn1").parent().removeClass('active');
+      $("#btn4").parent().removeClass('active');
+    });
+    $("#btn4").click(function() {
+      $("#editCard").show();
+      $("#msgDiv1").hide();
+      $("#postDiv").hide();
+      $("#msgDiv2").hide();
+      $(this).parent().addClass('active');
+      $("#btn2").parent().removeClass('active');
+      $("#btn1").parent().removeClass('active');
+      $("#btn3").parent().removeClass('active');
+    });
+    $(document).ready(function() {
+      $().ready(function() {
+        $sidebar = $('.sidebar');
+
+        $sidebar_img_container = $sidebar.find('.sidebar-background');
+
+        $full_page = $('.full-page');
+
+        $sidebar_responsive = $('body > .navbar-collapse');
+
+        window_width = $(window).width();
+
+        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+        if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
+          if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
+            $('.fixed-plugin .dropdown').addClass('open');
+          }
+
+        }
+
+        $('.fixed-plugin a').click(function(event) {
+          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+          if ($(this).hasClass('switch-trigger')) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            } else if (window.event) {
+              window.event.cancelBubble = true;
+            }
+          }
+        });
+
+        $('.fixed-plugin .active-color span').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-color', new_color);
+          }
+
+          if ($full_page.length != 0) {
+            $full_page.attr('filter-color', new_color);
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.attr('data-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .background-color .badge').click(function() {
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('background-color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-background-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .img-holder').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).parent('li').siblings().removeClass('active');
+          $(this).parent('li').addClass('active');
+
+
+          var new_image = $(this).find("img").attr('src');
+
+          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            $sidebar_img_container.fadeOut('fast', function() {
+              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+              $sidebar_img_container.fadeIn('fast');
+            });
+          }
+
+          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $full_page_background.fadeOut('fast', function() {
+              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+              $full_page_background.fadeIn('fast');
+            });
+          }
+
+          if ($('.switch-sidebar-image input:checked').length == 0) {
+            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+          }
+        });
+
+        $('.switch-sidebar-image input').change(function() {
+          $full_page_background = $('.full-page-background');
+
+          $input = $(this);
+
+          if ($input.is(':checked')) {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar_img_container.fadeIn('fast');
+              $sidebar.attr('data-image', '#');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page_background.fadeIn('fast');
+              $full_page.attr('data-image', '#');
+            }
+
+            background_image = true;
+          } else {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar.removeAttr('data-image');
+              $sidebar_img_container.fadeOut('fast');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page.removeAttr('data-image', '#');
+              $full_page_background.fadeOut('fast');
+            }
+
+            background_image = false;
+          }
+        });
+
+        $('.switch-sidebar-mini input').change(function() {
+          $body = $('body');
+
+          $input = $(this);
+
+          if (md.misc.sidebar_mini_active == true) {
+            $('body').removeClass('sidebar-mini');
+            md.misc.sidebar_mini_active = false;
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+
+          } else {
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+
+            setTimeout(function() {
+              $('body').addClass('sidebar-mini');
+
+              md.misc.sidebar_mini_active = true;
+            }, 300);
+          }
+
+          // we simulate the window Resize so the charts will get updated in realtime.
+          var simulateWindowResize = setInterval(function() {
+            window.dispatchEvent(new Event('resize'));
+          }, 180);
+
+          // we stop the simulation of Window Resize after the animations are completed
+          setTimeout(function() {
+            clearInterval(simulateWindowResize);
+          }, 1000);
+
+        });
+      });
+    });
+  </script>
+          <script>
+            function autocomplete(inp, arr) {
+              /*the autocomplete function takes two arguments,
+              the text field element and an array of possible autocompleted values:*/
+              var currentFocus;
+              /*execute a function when someone writes in the text field:*/
+              inp.addEventListener("input", function(e) {
+                  var a, b, i, val = this.value;
+                  /*close any already open lists of autocompleted values*/
+                  closeAllLists();
+                  if (!val) { return false;}
+                  currentFocus = -1;
+                  /*create a DIV element that will contain the items (values):*/
+                  a = document.createElement("DIV");
+                  a.setAttribute("id", this.id + "autocomplete-list");
+                  a.setAttribute("class", "autocomplete-items");
+                  /*append the DIV element as a child of the autocomplete container:*/
+                  this.parentNode.appendChild(a);
+                  /*for each item in the array...*/
+                  for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                      /*create a DIV element for each matching element:*/
+                      b = document.createElement("DIV");
+                      /*make the matching letters bold:*/
+                      b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                      b.innerHTML += arr[i].substr(val.length);
+                      /*insert a input field that will hold the current array item's value:*/
+                      b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                      /*execute a function when someone clicks on the item value (DIV element):*/
+                      b.addEventListener("click", function(e) {
+                          /*insert the value for the autocomplete text field:*/
+                          inp.value = this.getElementsByTagName("input")[0].value;
+                          /*close the list of autocompleted values,
+                          (or any other open lists of autocompleted values:*/
+                          closeAllLists();
+                      });
+                      a.appendChild(b);
+                    }
+                  }
+              });
+              /*execute a function presses a key on the keyboard:*/
+              inp.addEventListener("keydown", function(e) {
+                  var x = document.getElementById(this.id + "autocomplete-list");
+                  if (x) x = x.getElementsByTagName("div");
+                  if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                  } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                  } else if (e.keyCode == 13) {
+                    /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                      /*and simulate a click on the "active" item:*/
+                      if (x) x[currentFocus].click();
+                    }
+                  }
+              });
+              function addActive(x) {
+                /*a function to classify an item as "active":*/
+                if (!x) return false;
+                /*start by removing the "active" class on all items:*/
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                /*add class "autocomplete-active":*/
+                x[currentFocus].classList.add("autocomplete-active");
+              }
+              function removeActive(x) {
+                /*a function to remove the "active" class from all autocomplete items:*/
+                for (var i = 0; i < x.length; i++) {
+                  x[i].classList.remove("autocomplete-active");
+                }
+              }
+              function closeAllLists(elmnt) {
+                /*close all autocomplete lists in the document,
+                except the one passed as an argument:*/
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                  if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                  }
+                }
+              }
+              /*execute a function when someone clicks in the document:*/
+              document.addEventListener("click", function (e) {
+                  closeAllLists(e.target);
+              });
+            }
+
+            /*An array containing all the country names in the world:*/
+            var countries = ["Toronto(GTA)", "Hamilton", "Kitchener", "Burlington", "Oshawa", "London", "Durham"];
+            var countries2 = ["Raspberry pi", "Jetson TX2", "Arduino", "Drone", "OpenCV", "C++", "Python", "Soldering", "Firmware", "MAVLINK"];
+            /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+            autocomplete(document.getElementById("city"), countries);
+            autocomplete(document.getElementById("focus"), countries2);
+          </script>
+       </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
+       <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+{% endblock %}
+

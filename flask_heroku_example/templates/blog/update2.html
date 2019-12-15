@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<center>
+  <h1>{% block title %}Message user{% endblock %}</h1>
+</center>
+{% endblock %}
+
+{% block content %}
+<center>
+  <style type="text/css">
+    #msgs::selection {
+      background: blue;
+    }
+    #msgID::selection {
+      background: blue;
+    }
+  </style>
+    <script type="text/javascript">
+        function gp_signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                var j = confirm("Do you want to log out?");
+                if (j == true) {
+                  window.location.replace("https://collabora8e.herokuapp.com/logout")
+                }
+            });
+        }
+    function onLoad() {
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
+    }
+        $(document).ready(function() {
+            $("#from").hide();
+            $("#to").hide();
+            $(".success-help").hide();
+            $(".btn-primary").hide();
+        });
+        $(function() {
+          ["from", "to", "subject", "emailbody"].forEach(function(field) {
+            $("#" + field).attr("required", false);
+            $("#" + field).focus(function() {
+              $(".success-help").fadeOut("fast");
+            });
+          });
+
+          $("#button").click(function(e) {
+            $(".mdl-spinner").fadeIn("slow").css("display", "inline-block");
+            e.preventDefault();
+            $("#from").hide();
+            $("#to").hide();
+            var from = $("#from").val();
+            var to = $("#to").val();
+            var subject = "collabora8e";
+            var emailbody = $("#msgs").val();
+            $.ajax({
+              url: "https://mybench-sendingemail.backbench.io/send",
+              data: {
+                from: from,
+                to: to,
+                subject: subject,
+                emailbody: emailbody
+              },
+              error: function() {
+                $(".mdl-spinner").fadeOut("fast");
+                $(".success-help").html("An error has occurred").fadeIn("slow");
+              },
+              success: function(data) {
+                $(".mdl-spinner").fadeOut("fast");
+                ["from", "to", "subject", "emailbody"].forEach(function(field) {
+                  $("#" + field).val("");
+                });
+                $(".success-help").fadeIn("slow");
+                document.fr.submit();
+              },
+              type: "POST"
+            });
+          });
+        });
+    </script>
+    <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
+      <div class="demo-ribbon"></div>
+      <main class="demo-main mdl-layout__content">
+        <section class="clean-block clean-form dark">
+            <div class="container">
+              <br></br>
+                <div class="block-heading">
+                    <h2><strong>Message another user</strong></h2>
+                </div>
+                <form method="post" name="fr" id="fr">
+                    <input  type="email" id="from" value="{{ g.cuser[3] }}">
+                    <input  type="email" id="to" value="{{ user[3] }}">
+                    <div style="color:black;" class="form-group"><label >Recipient username:<input class="form-control" type="text" style="width: 420px;" name="msgID"id="msgID" value="{{ user[0] }}"></label></div>
+                    <div style="color:black;" class="form-group"><label>Type message:<input class="form-control" type="text" style="width: 420px;" name="msgs"id="msgs"></label></div>
+                    <button class="btn btn-primary btn-block" type="submit" style="font-size: 12px;">Send</button>
+                    <a class="btn btn-block" id="button" style="color: white; background-color: #9D1EAD; font-size: 12px;">Send</a>
+                </form>
+            </div>
+        </section>
+      </main>
+    </div>
+</center>
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+h1 {
+  font-size: 2.0rem;
+  font-weight: 800;
+}
+
+body {
+  font-family: roboto;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+}
+
+html {
+  width: 100%;
+}
+
+.page.landing-page {
+  width: 100%;
+}
+
+.btn.btn-primary {
+  border-radius: 8px;
+}
+
+.btn.btn-outline-primary {
+  border-radius: 8px;
+}
+
+.demo {
+  border: 2px dashed #039cff;
+  border-radius: 8px;
+}
+

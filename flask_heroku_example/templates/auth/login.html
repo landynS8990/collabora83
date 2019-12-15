@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <main class="page landing-page">
+        <section class="clean-block clean-form dark">
+            <style type="text/css">
+                input::selection {
+                    background: blue;
+                }
+                label::selection {
+                    background: blue;
+                }
+            </style>
+            <div class="container">
+                <br></br>
+                <br></br>
+                <div class="block-heading">
+                    <h2 class="text-info"><strong>Sign in</strong></h2>
+                </div>
+                <script type="text/javascript">
+                        var clicked=false;//Global Variable
+                        function ClickLogin()
+                        {
+                            clicked=true;
+                        }
+                        function onSignIn(googleUser) {
+                          // Useful data for your client-side scripts:
+                          if (clicked) {
+                            var profile = googleUser.getBasicProfile();
+                            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                            console.log('Full Name: ' + profile.getName());
+                            var yeet = profile.getName().toString();
+                            $("#username").val(yeet);
+                            $("#password").val("blyat");
+                            document.getElementById("form").submit();
+                          }
+
+                          // The ID token you need to pass to your backend:
+                        }
+                        function gp_signOut() {
+                            var auth2 = gapi.auth2.getAuthInstance();
+                            auth2.signOut().then(function () {
+                                console.log('User signed out.');
+                                var j = confirm("Do you want to log out?");
+                                if (j == true) {
+                                  window.location.replace("https://projectware.herokuapp.com/logout")
+                                }
+                            });
+                        }
+                        function onLoad() {
+                          gapi.load('auth2', function() {
+                            gapi.auth2.init();
+                          });
+                        }
+                </script>
+                <form method="post" id="form" autocomplete="off">
+                    <div style="color:black;" class="form-group"><label for="username">Username<input class="form-control" type="text" style="width: 420px;" name="username"id="username"></label></div>
+                    <div style="color:black;" class="form-group"><label for="password">Password</label><input class="form-control" name="password"type="password" id="password"></div>
+                    <div class="g-signin2" onclick="ClickLogin()" data-onsuccess="onSignIn" data-theme="dark"></div>
+                    <input type="checkbox" onclick="myFunction()" style="size: 30px; color: black; font-size: 40px; border:2px dotted #00f;"> Show Password</input>
+                    <script>
+                    function myFunction() {
+                      var x = document.getElementById("password");
+                      if (x.type === "password") {
+                        x.type = "text";
+                      } else {
+                        x.type = "password";
+                      }
+                    }
+                    </script>
+
+                    <div class="form-group">
+                    </div><button class="btn btn-primary btn-block" type="submit">Log In</button></form>
+            </div>
+        </section>
+    </main>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script src="/statics/assets/js/jquery.min.js"></script>
+    <script src="/statics/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="/statics/assets/js/smoothproducts.min.js"></script>
+    <script src="/statics/assets/js/theme.js"></script>
+{% endblock %}

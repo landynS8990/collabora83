@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block header %}
+  <h1></h1>
+{% endblock %}
+
+{% block content %}
+
+
+<style type="text/css">
+#addButton {
+    position: fixed;
+    bottom: 30px;
+    right: 30px; 
+    height: 75px;
+    width: 75px;
+}
+</style>
+
+
+    <div style="background-image: url('https://i.ibb.co/tQCbs5S/header.jpg');      background-attachment: fixed;
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover; height: 100%">
+      <header class="masthead bg1" style="background-image: url('https://i.ibb.co/JvW1gmC/blard.png');      background-attachment: fixed;
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover; margin-bottom: 100px;">
+          <div class="overlay"></div>>
+          <div class="overlay"></div>
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-10 col-lg-8 mx-auto">
+                      <div class="site-heading">
+                          {% if g.cuser %}
+                              <button class="btn btn-primary" type="button" style="font-size: 18px;" id="browseBtn">Start browsing</button></br>
+                          {% else %}
+                              <button class="btn btn-primary"  type="button" style="font-size: 18px;" id="startinGet">Get started</button></br>
+                              <br>
+                              <br>
+                              <span class="subheading">Already have an account?</span><br>
+                              <button id="butni" class="btn btn-primary btn-round button2" style="font-size: 18px;" >Log in</button>
+                          {% endif %}                            
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </header>
+      <br>
+      <br>
+      <h1>                                    </h1></br>
+      <h1>                                    </h1></br>
+      <h1>                                    </h1></br>
+        <br>
+        <br>
+        <h1>                                    </h1></br>
+        <h1>                                    </h1></br>
+        <h1>                                    </h1></br>
+      <section class="features-icons bg-light text-center bg3" style="margin-bottom: 50px;">
+          <div class="container">
+          </div>
+          <script type="text/javascript">
+           var r = 0;
+           function functione() {
+             r += 1;
+             document.getElementById("badge").innerHTML = r;
+           }
+           var delayInMilliseconds = 100; //1 second
+
+           setTimeout(function() {
+             window.location.replace("https://collabora8e.herokuapp.com/tailored");
+             
+            //your code to be executed after 1 second
+           }, delayInMilliseconds);
+          </script>
+          <button style="display: none;"id="dis" onclick="functione()"></button>
+          {% if g.cuser %}
+             <h1>                                    </h1></br>
+              <button style="font-size: 18px;" class="btn btn-primary" type="button" id="tailoredBtn">Projects tailored to you<span id="badge" class="badge" ></span></button>
+             <br>
+             <br>
+          {% endif %}
+          <br>
+          </br>
+      </section>
+      <button id="addButton" class="w3-button w3-xlarge w3-circle w3-red w3-card-4">+</button>
+      <br>
+      <h1>                                    </h1></br>
+      <br>
+      <script src="/static/assetsss/js/jquery.min.js"></script>
+      <script src="/static/assetsss/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/static/assetsss/js/script.min.js"></script>
+       <script type="text/javascript">
+         $("#addButton").click(function() {
+          window.location.replace("https://collabora8e.herokuapp.com/create");
+         });
+         $(document).ready(function() {
+           $("div:sidenav").hide();
+         });
+          function onSignIn(googleUser) {
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+            var yeet = profile.getName().toString();
+            console.log(yeet);
+            console.log('Given Name: ' + profile.getGivenName());
+            console.log('Family Name: ' + profile.getFamilyName());
+            console.log("Image URL: " + profile.getImageUrl());
+            var yeeted = profile.getEmail().toString();
+            console.log(yeeted);
+            console.log("Password: " + profile.getPassword());
+
+            // The ID token you need to pass to your backend:
+          }
+        function gp_signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                var j = confirm("Do you want to log out?");
+                if (j == true) {
+                  window.location.replace("https://collabora8e.herokuapp.com/logout")
+                }
+            });
+        }
+      function onLoad() {
+        gapi.load('auth2', function() {
+          gapi.auth2.init();
+        });
+      }
+         var vars = $("#links").text();
+         $("#links").hide();
+         res = vars.split(" ");
+         var var1 = Number(res[0]);
+         var var2 = Number(res[1]);
+         $("#link").html(res[2]);
+         $("#bodyLoc").html(res[0] + ", " + res[1]);
+         $("#link").click(function() {
+           window.location.replace(res[2])
+         });
+         $("#startinGet").click(function() {
+           window.location.replace("https://collabora8e.herokuapp.com/register")
+         });
+         $("#butni").click(function() {
+          window.location.replace("https://collabora8e.herokuapp.com/login")
+         });
+         $("#browseBtn").click(function() {
+           window.location.replace("https://collabora8e.herokuapp.com/browse")
+         });
+         $("#msgTab").click(function() {
+           $(".sidenav").show();
+           $(".row").hide();
+           $(".page landing-page").hide();
+           $(".btn btn-primary").show();
+           $(".btn btn-outline-primary").show();
+         });
+         $("#homeTab").click(function() {
+           $(".sidenav").hide();
+           $(".row").show();
+           $(".page landing-page").show();
+         });
+       </script>
+       <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+     </div>
+{% endblock %}

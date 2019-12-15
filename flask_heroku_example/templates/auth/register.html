@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <main class="page landing-page">
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+
+    /*the container must be positioned relative:*/
+
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      border-bottom: none;
+      border-top: none;
+      z-index: 99;
+      /*position the autocomplete items to be the same width as the container:*/
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: #fff; 
+      border-bottom: 1px solid #d4d4d4; 
+    }
+
+    /*when hovering an item:*/
+    .autocomplete-items div:hover {
+      background-color: #e9e9e9; 
+    }
+
+    /*when navigating through the items using the arrow keys:*/
+    .autocomplete-active {
+      background-color: DodgerBlue !important; 
+      color: #ffffff; 
+    }
+    </style>
+        <section class="clean-block clean-form dark">
+          <style type="text/css">
+              input::selection {
+                  background: blue;
+              }
+              label::selection {
+                  background: blue;
+              }
+          </style>
+            <div class="container">
+                <br></br>
+                <br></br>
+                 <div class="block-heading">
+                    <h2 class="text-info"><strong>Sign up</strong></h2>
+                </div>
+                <script type="text/javascript">
+                        var clicked=false;//Global Variable
+                        function ClickLogin()
+                        {
+                            clicked=true;
+                        }
+                        function onSignIn(googleUser) {
+                          // Useful data for your client-side scripts:
+                          var profile = googleUser.getBasicProfile();
+                          console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                          console.log('Full Name: ' + profile.getName());
+                          var yeet = profile.getName().toString();
+                          $("#username").val(yeet);
+                          console.log('Given Name: ' + profile.getGivenName());
+                          var yeet1 = profile.getGivenName().toString();
+                          $("#firstname").val(yeet1);
+                          console.log('Given Name: ' + profile.getFamilyName());
+                          var yeet2 = profile.getGivenName().toString();
+                          $("#lastname").val(yeet2);
+                          console.log('Family Name: ' + profile.getFamilyName());
+                          console.log("Image URL: " + profile.getImageUrl());
+                          console.log("Email: " + profile.getEmail());
+                          var yeeted = profile.getEmail().toString();
+                          $("#email").val(yeeted);
+                          $("#password").val("blyat");
+                          $("#focus").val("  ");
+                          document.getElementById("form").submit();
+
+                          // The ID token you need to pass to your backend:
+                        }
+        function gp_signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                var j = confirm("Do you want to log out?");
+                if (j == true) {
+                  window.location.replace("https://projectware.herokuapp.com/logout")
+                }
+            });
+        }
+    function onLoad() {
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
+    }
+                </script>
+                <form method="post" id="form" autocomplete="off">
+                    <div class="autocomplete">
+                      <div style="color:black;" class="form-group"><label for="firstname">First name<input class="form-control" type="text" style="width: 420px;" name="firstname"id="firstname" required></label></div>
+                      <div style="color:black;" class="form-group"><label for="lastname">Last name<input class="form-control" type="text" style="width: 420px;" name="lastname"id="lastname" required></label></div>
+                      <div style="color:black;" class="form-group"><label for="username">Username<input class="form-control" type="text" style="width: 420px;" name="username"id="username" required></label></div>
+                      <div style="color:black;" class="form-group"><label for="focus">Focus(area of expertise)</label><input class="form-control" type="text" style="width: 420px;" name="focus" id="focus" required></div>
+                      <div style="color:black;" class="form-group"><label for="email">Email</label><input class="form-control item" name="email"type="email" id="email" required></div>
+                      <div style="color:black;" class="form-group"><label >City</label><input class="form-control item" name="city"type="text" id="city" required></div>
+                      <div style="color:black;" class="form-group"><label >Phone number</label><input class="form-control item" name="number"type="text" id="number" required></div>
+                      <div style="color:black;" class="form-group"><label for="password">Password</label><input class="form-control" name="password"type="password" id="password" required></div>
+                    </div>
+                    <div class="g-signin2" onclick="ClickLogin()" data-onsuccess="onSignIn" data-theme="dark"></div>
+                    <input type="checkbox" onclick="myFunction()" style="size: 30px; color: black; font-size: 40px; border:2px dotted #00f;"> Show Password</input>
+                    <script>
+                        function myFunction() {
+                          var x = document.getElementById("password");
+                          if (x.type === "password") {
+                            x.type = "text";
+                          } else {
+                            x.type = "password";
+                          }
+                        }
+                    </script>
+                    <div class="form-group">
+                    </div><button class="btn btn-primary btn-block" type="submit">Register</button>
+                    <br>
+                    </form>
+            </div>
+        </section>
+          <script>
+            function autocomplete(inp, arr) {
+              /*the autocomplete function takes two arguments,
+              the text field element and an array of possible autocompleted values:*/
+              var currentFocus;
+              /*execute a function when someone writes in the text field:*/
+              inp.addEventListener("input", function(e) {
+                  var a, b, i, val = this.value;
+                  /*close any already open lists of autocompleted values*/
+                  closeAllLists();
+                  if (!val) { return false;}
+                  currentFocus = -1;
+                  /*create a DIV element that will contain the items (values):*/
+                  a = document.createElement("DIV");
+                  a.setAttribute("id", this.id + "autocomplete-list");
+                  a.setAttribute("class", "autocomplete-items");
+                  /*append the DIV element as a child of the autocomplete container:*/
+                  this.parentNode.appendChild(a);
+                  /*for each item in the array...*/
+                  for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                      /*create a DIV element for each matching element:*/
+                      b = document.createElement("DIV");
+                      /*make the matching letters bold:*/
+                      b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                      b.innerHTML += arr[i].substr(val.length);
+                      /*insert a input field that will hold the current array item's value:*/
+                      b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                      /*execute a function when someone clicks on the item value (DIV element):*/
+                      b.addEventListener("click", function(e) {
+                          /*insert the value for the autocomplete text field:*/
+                          inp.value = this.getElementsByTagName("input")[0].value;
+                          /*close the list of autocompleted values,
+                          (or any other open lists of autocompleted values:*/
+                          closeAllLists();
+                      });
+                      a.appendChild(b);
+                    }
+                  }
+              });
+              /*execute a function presses a key on the keyboard:*/
+              inp.addEventListener("keydown", function(e) {
+                  var x = document.getElementById(this.id + "autocomplete-list");
+                  if (x) x = x.getElementsByTagName("div");
+                  if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                  } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                  } else if (e.keyCode == 13) {
+                    /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                      /*and simulate a click on the "active" item:*/
+                      if (x) x[currentFocus].click();
+                    }
+                  }
+              });
+              function addActive(x) {
+                /*a function to classify an item as "active":*/
+                if (!x) return false;
+                /*start by removing the "active" class on all items:*/
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                /*add class "autocomplete-active":*/
+                x[currentFocus].classList.add("autocomplete-active");
+              }
+              function removeActive(x) {
+                /*a function to remove the "active" class from all autocomplete items:*/
+                for (var i = 0; i < x.length; i++) {
+                  x[i].classList.remove("autocomplete-active");
+                }
+              }
+              function closeAllLists(elmnt) {
+                /*close all autocomplete lists in the document,
+                except the one passed as an argument:*/
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                  if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                  }
+                }
+              }
+              /*execute a function when someone clicks in the document:*/
+              document.addEventListener("click", function (e) {
+                  closeAllLists(e.target);
+              });
+            }
+
+            /*An array containing all the country names in the world:*/
+            var countries = ["Toronto(GTA)", "Hamilton", "Kitchener", "Burlington", "Oshawa", "London", "Durham"];
+
+            /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+            autocomplete(document.getElementById("city"), countries);
+          </script>
+    </main>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script src="/statics/assets/js/jquery.min.js"></script>
+    <script src="/statics/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="/statics/assets/js/smoothproducts.min.js"></script>
+    <script src="/statics/assets/js/theme.js"></script>
+{% endblock %}

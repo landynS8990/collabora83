@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% block header %}
+ <h1></h1>
+{% endblock %}
+{% block content %}
+       <ul class="nav text-light" id="accordionSidebar"></ul>
+       <style type="text/css">
+         h1::selection {
+          background: blue;
+         }
+         p::selection {
+          background: blue;
+         }
+         a::selection {
+          background: blue;
+         }
+       </style>
+       <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+          <h1>                                    </h1></br>
+          <h1>                                    </h1></br>
+          <h1>                                    </h1></br>
+          <h4>                                    </h4></br>
+          <style>
+            #postName:hover {
+              color: purple;
+            } 
+          </style>
+          <center>
+            <h2><strong>Projects tailored to you</strong></h2>
+          </center>
+          <section class="text-center">
+              {% if g.cuser %}
+                  {% for country in countries %}
+                      {% if g.cuser[2].lower() in country[5].lower() %}
+                          <div class="col-md-4">
+                            <div class="card card-profile">
+                              <div class="card-body">
+                                   <div class="post-preview">
+                                       <a href="{{ url_for('view', title=country[2]) }}">
+                                           <h2><strong>{{ country[2] }}</strong></h2>
+                                       </a>
+                                       <p class="post-meta">Posted by: {{ country[1] }}</p>
+                                       <p class="post-meta">Description: {{ country[4] }}</p>
+                                       <p class="post-meta">Skills required: {{ country[5] }}</p>
+                                       <a href="{{ url_for('update2', id=country[0]) }}" class="btn btn-primary btn-round" style="font-size: 12px;">Reach out</a>
+                                       <a id="yeet" onclick="sendFunction()"></a>
+                                   </div>
+                              </div>
+                            </div>
+                          </div>
+                      {% elif g.cuser[2].lower() in country[4].lower() %}
+                          <div class="col-md-4">
+                            <div class="card card-profile">
+                              <div class="card-body">
+                                   <div class="post-preview">
+                                       <a href="{{ url_for('view', title=country[2]) }}">
+                                           <h2><strong>{{ country[2] }}</strong></h2>
+                                       </a>
+                                       <p class="post-meta">Posted by {{ country[1] }}</p>
+                                       <p class="post-meta">Description: {{ country[4] }}</p>
+                                       <p class="post-meta">Skills required: {{ country[5] }}</p>
+                                       <a href="{{ url_for('update2', id=country[0]) }}" class="btn btn-primary btn-round" style="font-size: 12px;">Reach out</a>
+                                       <a id="yeeted" onclick="sendFunction()"></a>
+                                   </div>
+                              </div>
+                            </div>
+                          </div>
+                      {% elif g.cuser[2].lower() in country[6].lower() %}
+                          <div class="col-md-4">
+                            <div class="card card-profile">
+                              <div class="card-body">
+                                   <div class="post-preview">
+                                       <a href="{{ url_for('view', title=country[2]) }}">
+                                           <h2><strong>{{ country[2] }}</strong></h2>
+                                       </a>
+                                       <p class="post-meta">Posted by {{ country[1] }}</p>
+                                       <p class="post-meta">Description: {{ country[4] }}</p>
+                                       <p class="post-meta">Skills required: {{ country[5] }}</p>
+                                       <a href="{{ url_for('update2', id=country[0]) }}" class="btn btn-primary btn-round" style="font-size: 12px;">Reach out</a>
+                                       <a id="yeeted" onclick="sendFunction()"></a>
+                                   </div>
+                              </div>
+                            </div>
+                          </div>
+                      {% endif %}
+                  {% endfor %}
+              {% endif %}
+          </section>
+        </div>
+       </div> 
+              <script type="text/javascript">
+                $(document).ready(function() {
+                  $("#yeet").trigger('click');
+                  $("#yeeted").trigger('click');
+                });
+                function sendFunction(e) {
+                  $(".mdl-spinner").fadeIn("slow").css("display", "inline-block");
+                  e.preventDefault();
+                  $("#from").hide();
+                  $("#to").hide();
+                  $("#button").hide();
+                  $(".btn-primary").show();
+                  var from = $("#from").val();
+                  var to = $("#to").val();
+                  var subject = "Projec";
+                  var emailbody = $("#msgs").val();
+                  $.ajax({
+                    url: "https://mybench-sendingemail.backbench.io/send",
+                    data: {
+                      from: from,
+                      to: to,
+                      subject: subject,
+                      emailbody: emailbody
+                    },
+                    error: function() {
+                      $(".mdl-spinner").fadeOut("fast");
+                      $(".success-help").html("An error has occurred").fadeIn("slow");
+                    },
+                    success: function(data) {
+                      $(".mdl-spinner").fadeOut("fast");
+                      ["from", "to", "subject", "emailbody"].forEach(function(field) {
+                        $("#" + field).val("");
+                      });
+                      $(".success-help").fadeIn("slow");
+                    },
+                    type: "POST"
+                  });
+                }
+                $("#link1").click(function() {
+                  $("#msgDiv").show();
+                  $("#postDiv").hide();
+                });
+                $("#link2").click(function() {
+                  $("#postDiv").show();
+                  $("#msgDiv").hide();
+                });
+                $("#refresh").click(function() {
+                  window.location.replace("https://collabora8e.herokuapp.com/browse")
+                });
+        function gp_signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                var j = confirm("Do you want to log out?");
+                if (j == true) {
+                  window.location.replace("https://collabora8e.herokuapp.com/logout")
+                }
+            });
+        }
+    function onLoad() {
+      gapi.load('auth2', function() {
+        gapi.auth2.init();
+      });
+    }
+              </script>
+              <script>
+                $(document).ready(function() {
+                  $().ready(function() {
+                    $sidebar = $('.sidebar');
+
+                    $sidebar_img_container = $sidebar.find('.sidebar-background');
+
+                    $full_page = $('.full-page');
+
+                    $sidebar_responsive = $('body > .navbar-collapse');
+
+                    window_width = $(window).width();
+
+                    fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+                    if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
+                      if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
+                        $('.fixed-plugin .dropdown').addClass('open');
+                      }
+
+                    }
+
+                    $('.fixed-plugin a').click(function(event) {
+                      // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+                      if ($(this).hasClass('switch-trigger')) {
+                        if (event.stopPropagation) {
+                          event.stopPropagation();
+                        } else if (window.event) {
+                          window.event.cancelBubble = true;
+                        }
+                      }
+                    });
+
+                    $('.fixed-plugin .active-color span').click(function() {
+                      $full_page_background = $('.full-page-background');
+
+                      $(this).siblings().removeClass('active');
+                      $(this).addClass('active');
+
+                      var new_color = $(this).data('color');
+
+                      if ($sidebar.length != 0) {
+                        $sidebar.attr('data-color', new_color);
+                      }
+
+                      if ($full_page.length != 0) {
+                        $full_page.attr('filter-color', new_color);
+                      }
+
+                      if ($sidebar_responsive.length != 0) {
+                        $sidebar_responsive.attr('data-color', new_color);
+                      }
+                    });
+
+                    $('.fixed-plugin .background-color .badge').click(function() {
+                      $(this).siblings().removeClass('active');
+                      $(this).addClass('active');
+
+                      var new_color = $(this).data('background-color');
+
+                      if ($sidebar.length != 0) {
+                        $sidebar.attr('data-background-color', new_color);
+                      }
+                    });
+
+                    $('.fixed-plugin .img-holder').click(function() {
+                      $full_page_background = $('.full-page-background');
+
+                      $(this).parent('li').siblings().removeClass('active');
+                      $(this).parent('li').addClass('active');
+
+
+                      var new_image = $(this).find("img").attr('src');
+
+                      if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                        $sidebar_img_container.fadeOut('fast', function() {
+                          $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                          $sidebar_img_container.fadeIn('fast');
+                        });
+                      }
+
+                      if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                        var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+                        $full_page_background.fadeOut('fast', function() {
+                          $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                          $full_page_background.fadeIn('fast');
+                        });
+                      }
+
+                      if ($('.switch-sidebar-image input:checked').length == 0) {
+                        var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+                        var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+                        $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                        $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                      }
+
+                      if ($sidebar_responsive.length != 0) {
+                        $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+                      }
+                    });
+
+                    $('.switch-sidebar-image input').change(function() {
+                      $full_page_background = $('.full-page-background');
+
+                      $input = $(this);
+
+                      if ($input.is(':checked')) {
+                        if ($sidebar_img_container.length != 0) {
+                          $sidebar_img_container.fadeIn('fast');
+                          $sidebar.attr('data-image', '#');
+                        }
+
+                        if ($full_page_background.length != 0) {
+                          $full_page_background.fadeIn('fast');
+                          $full_page.attr('data-image', '#');
+                        }
+
+                        background_image = true;
+                      } else {
+                        if ($sidebar_img_container.length != 0) {
+                          $sidebar.removeAttr('data-image');
+                          $sidebar_img_container.fadeOut('fast');
+                        }
+
+                        if ($full_page_background.length != 0) {
+                          $full_page.removeAttr('data-image', '#');
+                          $full_page_background.fadeOut('fast');
+                        }
+
+                        background_image = false;
+                      }
+                    });
+
+                    $('.switch-sidebar-mini input').change(function() {
+                      $body = $('body');
+
+                      $input = $(this);
+
+                      if (md.misc.sidebar_mini_active == true) {
+                        $('body').removeClass('sidebar-mini');
+                        md.misc.sidebar_mini_active = false;
+
+                        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+
+                      } else {
+
+                        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+
+                        setTimeout(function() {
+                          $('body').addClass('sidebar-mini');
+
+                          md.misc.sidebar_mini_active = true;
+                        }, 300);
+                      }
+
+                      // we simulate the window Resize so the charts will get updated in realtime.
+                      var simulateWindowResize = setInterval(function() {
+                        window.dispatchEvent(new Event('resize'));
+                      }, 180);
+
+                      // we stop the simulation of Window Resize after the animations are completed
+                      setTimeout(function() {
+                        clearInterval(simulateWindowResize);
+                      }, 1000);
+
+                    });
+                  });
+                });
+              </script>
+           </div>
+       </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
+       <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+{% endblock %}
+

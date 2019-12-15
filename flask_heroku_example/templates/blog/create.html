@@ -1,0 +1,578 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+
+    /*the container must be positioned relative:*/
+
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      border-bottom: none;
+      border-top: none;
+      z-index: 99;
+      /*position the autocomplete items to be the same width as the container:*/
+      top: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: #fff; 
+      border-bottom: 1px solid #d4d4d4; 
+    }
+
+    /*when hovering an item:*/
+    .autocomplete-items div:hover {
+      background-color: #e9e9e9; 
+    }
+
+    /*when navigating through the items using the arrow keys:*/
+    .autocomplete-active {
+      background-color: DodgerBlue !important; 
+      color: #ffffff; 
+    }
+    </style>
+	<main class="page landing-page">
+	  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+	  integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+	  crossorigin=""></script>
+    <script src="https://unpkg.com/esri-leaflet@2.3.2/dist/esri-leaflet.js"
+    integrity="sha512-6LVib9wGnqVKIClCduEwsCub7iauLXpwrd5njR2J507m3A2a4HXJDLMiSZzjcksag3UluIfuW1KzuWVI5n/cuQ=="
+    crossorigin=""></script>
+
+
+    <!-- Load Esri Leaflet Geocoder from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.css"
+      integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+      crossorigin="">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.js"
+      integrity="sha512-8twnXcrOGP3WfMvjB0jS5pNigFuIWj4ALwWEgxhZ+mxvjF5/FBPVd5uAxqT8dd2kUmTVK9+yQJ4CmTmSg/sXAQ=="
+      crossorigin=""></script>
+	    <section class="clean-block clean-form dark">
+	        <div class="container">
+	        	<br></br>
+                <div class="block-heading">
+                    <h2><strong>Post project</strong></h2>
+                </div>
+	            <form method="post" autocomplete="off">
+	            	<style type="text/css">
+	            		#title::selection {
+                           background: blue;
+						}
+	            		#body::selection {
+                           background: blue;
+						}
+	            		#github::selection {
+                           background: blue;
+						}
+	            		#skills::selection {
+                           background: blue;
+						}
+	            	</style>
+	            	<center>
+	            		<div class="autocomplete">
+		                    <div style="color:black; " class="form-group"><label>Issue(please be as specific as possible)<input class="form-control" type="text"  name="titles"id="titles"></label></div>
+		                    <div style="color:black; " class="form-group"><label>Describe your project in detail - include all progress already made<input class="form-control" type="text" name="bodys"id="bodys"></label></div>
+		                    <div><label >Upload image<input type="file"  name="localPic"id="localPic" accept="image/*" onchange="localPicChange()"></label></div>
+		                    <div style="color:black; " class="form-group"><label>Github repository<input class="form-control" type="text"  name="githubs"id="githubs"></label></div>
+		                    <div style="color:black; " class="form-group"><label>What you need to learn/use(stack, skill, etc)<input class="form-control" type="text"  name="skillss"id=skillss></label></div>
+		                    <div style="color:black; " class="form-group"><label>Components used(specific models)<input class="form-control" type="text"  name="comps"id="comps"></label></div>
+		                    <div style="color:black; " class="form-group"><label>What have you already tried doing to solve it?<input class="form-control" type="text"  name="trys"id="trys"></label></div>
+		                    <div style="color:black; display: none;" class="form-group"><label><input class="form-control" type="text"  name="pic"id="pic"></label></div>
+	                    </div>
+	                    <script type="text/javascript">
+							$.ajaxPrefilter(function(options) {
+							      if (options.crossDomain && jQuery.support.cors) {
+							          var http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+							          options.url = http + '//cors-anywhere.herokuapp.com/' + options.url;
+							          //options.url = "http://cors.corsproxy.io/url=" + options.url;
+							      }
+							});
+
+							function localPicChange() {
+							    var localPicFiles = document.getElementById('localPic').files;
+
+							    // Get the file
+							    if (FileReader && localPicFiles.length == 1) {
+							        var fr = new FileReader();
+							        fr.onload = function () {
+							            SetOutput(fr.result);
+							        };
+							        fr.readAsDataURL(localPicFiles[0]);
+							    }
+							}
+
+
+							function SetOutput(outP) {
+							    console.log(outP);
+							    $("#pic").val(outP);
+							}
+						</script>
+						<script type="text/javascript">
+							var tman = $("#pic").val();
+							if(tman != "") {
+								let classifier;
+
+								// A variable to hold the image we want to classify
+								let img;
+
+								function preload() {
+								  classifier = ml5.imageClassifier('MobileNet');
+								  var yang = $("#pic").val();
+								  img = loadImage(yang);
+								}
+
+								function setup() {
+								  createCanvas(400, 400);
+								  classifier.classify(img, gotResult);
+								  image(img, 0, 0);
+								}
+
+								// A function to run when we get any errors and the results
+								function gotResult(error, results) {
+								  // Display error in the console
+								  if (error) {
+								    console.error(error);
+								  } else {
+								    // The results are in an array ordered by confidence.
+								    console.log(results);
+								    createDiv('Label: ' + results[0].label);
+								    $("#comps").val(results[0].label);
+								    createDiv('Confidence: ' + nf(results[0].confidence, 0, 2));
+								  }
+								}
+							}
+						</script>
+                	</center>
+	                <input type="checkbox" id="shareChoice" style="size: 30px; border:2px dotted #00f;"><span id="spanVal" style="color: black; font-size: 10px;"> Share your workplace?</span></input>
+	                <br>
+	                <h1>                               </h1>
+	                <label style="color: black;" id="lab">Select the best place to reach you:</label>
+	                <div id="map"></div>
+	                <center>
+		                <a class="btn btn-round" id="save">Save location</a>
+		                <div style="color:black;" class="form-group"><label ><input class="form-control" type="text" style="width: 420px;" name="demos"id="demos"></label></div>
+		                <a class="btn btn-round" id="submitBtn" style="color: white; background-color: blue; font-size: 12px;">Create post</a>
+	                </center>
+	                <button id="sub" class="btn btn-primary btn-block" type="submit" style="font-size: 12px;">Post</button></form>
+	                <p id="useri">{{ users }}</p>
+	                <input value="{{ g.cuser[3] }}"id="userE"></input>
+	                <input value="{{ g.cuser[0] }}"id="userN"></input>
+	                <input value="{{ useri }}"id="useri2"></input>
+	                <button id="button">button</button>
+	                {% for u in users %}
+	                    {% if useri != "" %}
+	                    	{% if u[2].lower() in useri.lower() %}
+	                    	    {% if u[2] != "" %}
+	                    	        {% if u[3] != None %}
+	                    	            {% if u[4] != None %}
+		                    	        	{% if (u[4].lower().split(" ; "))[0] in g.cuser[4].lower() %}
+		                    	        		<p style="display: none;" id="loc" >{{ u[4] }}</p>
+			                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+					                    		<button style="display: none;" id="c"></button>
+					                    	{% else %}
+			                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+					                    		<button style="display: none;" id="c"></button>
+					                    	{% endif %}
+					                    {% else %}
+		                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+				                    		<button style="display: none;" id="c"></button>
+					                    {% endif %}
+		                    		{% endif %}
+	                    		{% endif %}
+	                    	{% elif u[2].lower() in useri2.lower() %}
+	                    	    {% if u[2] != "" %}
+	                    	        {% if u[3] != None %}
+	                    	            {% if u[4] != None %}
+		                    	        	{% if (u[4].lower().split(" ; "))[0] in g.cuser[4].lower() %}
+		                    	        		<p style="display: none;" id="loc" >{{ u[4] }}</p>
+			                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+					                    		<button style="display: none;" id="c"></button>
+					                    	{% else %}
+			                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+					                    		<button style="display: none;" id="c"></button>
+					                    	{% endif %}
+					                    {% else %}
+		                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+				                    		<button style="display: none;" id="c"></button>
+					                    {% endif %}
+		                    		{% endif %}
+	                    		{% endif %}
+	                    	{% elif u[2].lower() in useri3.lower() %}
+	                    	    {% if u[2] != "" %}
+	                    	        {% if u[3] != None %}
+	                    	            {% if u[4] != None %}
+		                    	        	{% if (u[4].lower().split(" ; "))[0] in g.cuser[4].lower() %}
+		                    	        		<p style="display: none;" id="loc" >{{ u[4] }}</p>
+			                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+					                    		<button style="display: none;" id="c"></button>
+					                    	{% else %}
+			                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+					                    		<button style="display: none;" id="c"></button>
+					                    	{% endif %}
+					                    {% else %}
+		                    	            <p style="display: none;" class="bleh" >{{ u[3] }}</p>
+				                    		<button style="display: none;" id="c"></button>
+					                    {% endif %}
+		                    		{% endif %}
+	                    		{% endif %}
+		                    {% endif %}
+	                    {% endif %}
+	                {% endfor %}
+	                <p id="useri4" ></p>
+	                {% if useri != "" %}
+	            		<script type="text/javascript">
+	            			$(document).ready(function() {
+	            				document.getElementById("c").click();
+	            			});
+	            			$("#submitBtn").hide();
+	            		</script>
+            		{% endif %}
+            		<script type="text/javascript">
+            		</script>
+            		<script type="text/javascript">
+            			var t = "";
+						var x = document.getElementsByClassName("bleh");
+						for (i = 0; i < x.length; i++) {
+						  t = x[i].textContent;
+						  console.log(t);
+						  var w = 0;
+						  document.getElementById("c").click();
+	                		$("#c").click(function(e) {
+		                      	var f = $("#userE").val();
+		                      	var n = $("#userN").val();
+		                      	var z = document.getElementById("loc").innerHTML;
+		                      	var fields = z.split(' ; ');
+		                      	var p = fields[1]
+		                      	var b = "";
+		                      	if(p != "") {
+		                      		b = " and is nearby!";
+		                      	}
+		                      	var N = "User " + n + " has a project you can help with " + b + "                           https://collabora8e.herokuapp.com/tailored" 
+					            $(".mdl-spinner").fadeIn("slow").css("display", "inline-block");
+					            $("#from").hide();
+					            $("#to").hide();
+					            $("#button").hide();
+					            $(".btn-primary").show();
+					            var from = $("#from").val();
+					            var to = $("#to").val();
+					            var subject = "Projec";
+					            var emailbody = $("#msgs").val();
+					            $.ajax({
+					              url: "https://mybench-sendingemail.backbench.io/send",
+					              data: {
+					                from: f,
+					                to: t,
+					                subject: "Projec - project you can help with",
+					                emailbody: N
+					              },
+					              error: function() {
+					                $(".mdl-spinner").fadeOut("fast");
+					                $(".success-help").html("An error has occurred").fadeIn("slow");
+					              },
+					              success: function(data) {
+					                $(".mdl-spinner").fadeOut("fast");
+					                ["from", "to", "subject", "emailbody"].forEach(function(field) {
+					                  $("#" + field).val("");
+					                });
+					                $(".success-help").fadeIn("slow");
+					              },
+					              type: "POST"
+					            });
+					        });
+						}
+            		</script>
+            		{% if useri != "" %}
+            		<script type="text/javascript">
+						var delayInMilliseconds = 100; //1 second
+
+						setTimeout(function() {
+							window.location.replace("https://collabora8e.herokuapp.com/browse");
+						  //your code to be executed after 1 second
+						}, delayInMilliseconds);
+            		</script>
+            		{% endif %}
+					<script>
+					$("#button").hide();
+		            $("#userE").hide();
+					$("#userN").hide();
+					$("#useri").hide();
+					$("#useri2").hide();
+			        function gp_signOut() {
+			            var auth2 = gapi.auth2.getAuthInstance();
+			            auth2.signOut().then(function () {
+			                console.log('User signed out.');
+			                var j = confirm("Do you want to log out?");
+			                if (j == true) {
+			                  window.location.replace("https://collabora8e.herokuapp.com/logout")
+			                }
+			            });
+			        }
+				    function onLoad() {
+				      gapi.load('auth2', function() {
+				        gapi.auth2.init();
+				      });
+				    }
+				    $("#sub").hide();
+					$("#demos").hide();
+					var xw = document.getElementById("demos");
+					$("#map").hide();
+					$("#save").hide();
+					$("#lab").hide();
+					var yeete = $("#useri").text();
+					var users = $("#useri2").text();
+					console.log(useri);
+					$(document).ready(function() {
+	                    $("#useri3").hide();
+					    if (navigator.geolocation) {
+					      navigator.geolocation.getCurrentPosition(showPosition,showError);
+					    } else { 
+					      xw.innerHTML = "Geolocation is not supported by this browser.";
+					    }
+					});
+					function showError(error) {
+					  switch(error.code) {
+					    case error.PERMISSION_DENIED:
+					      xw.innerHTML = "User denied the request for Geolocation.";
+						  $("#submitBtn").hide();
+						  $("#shareChoice").hide();
+						  document.getElementById("shareChoice").innerHTML = "";
+						  $("#sub").show();
+						  $("#spanVal").hide();
+					      console.log(x);
+					    case error.POSITION_UNAVAILABLE:
+					      xw.innerHTML = "Location information is unavailable.";
+						  $("#submitBtn").hide();
+						  $("#shareChoice").hide();
+						  document.getElementById("shareChoice").innerHTML = "";
+						  $("#sub").show();
+						  $("#spanVal").hide();
+					      console.log(x);
+					    case error.TIMEOUT:
+						  $("#submitBtn").hide();
+						  $("#shareChoice").hide();
+						  document.getElementById("shareChoice").innerHTML = "";
+						  $("#sub").show();
+					      xw.innerHTML = "bleh.";
+					      $("#spanVal").hide();
+					      console.log(x);
+					    case error.UNKNOWN_ERROR:
+						  $("#submitBtn").hide();
+						  $("#shareChoice").hide();
+						  document.getElementById("shareChoice").innerHTML = "";
+						  $("#sub").show();
+						  $("#spanVal").hide();
+					      xw.innerHTML = "fuck you asshole.";
+					      console.log(x);
+					  }
+					}
+					function showPosition(position) {
+				      var v = position.coords.latitude + " " + position.coords.longitude;
+					  $("#demo").val(v);
+		              var la = position.coords.latitude;
+		              var lo = position.coords.longitude;
+		              var apikey = '9bb69a99f20d41e098f2c07333726f6b';
+		              var a = la.toString();
+		              var b = lo.toString();
+		              var latitude = a;
+		              var longitude = b;
+		              var api_url = 'https://api.opencagedata.com/geocode/v1/json'
+		              var request_url = api_url
+		                + '?'
+		                + 'key=' + apikey
+		                + '&q=' + encodeURIComponent(latitude + ',' + longitude)
+		                + '&pretty=1'
+		                + '&no_annotations=1';
+		              // see full list of required and optional parameters:
+		              // https://opencagedata.com/api#forward
+		              var request = new XMLHttpRequest();
+		              request.open('GET', request_url, true);
+		              request.onload = function() {
+		                // see full list of possible response codes:
+		                // https://opencagedata.com/api#codes
+		                if (request.status == 200){
+		                  // Success!
+		                  var data = JSON.parse(request.responseText);
+		                  $("#submitBtn").click(function(e) {
+		                  	  var checkBox = document.getElementById("shareChoice");
+							  if (checkBox.checked == true){
+								  var r = confirm("Confirm " + data.results[0].formatted + " as the best location to reach you?");
+								  if (r == true) {
+								    $("#sub").show();
+								    $("#submitBtn").hide();
+								  } else {
+								  	$("#save").show();
+								  	$("#submitBtn").hide();
+								    $("#map").show();
+								    $("#lab").show();
+								    var map = L.map('map').setView([40.91, -96.63], 4);
+
+								    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+								      attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+								    }).addTo(map);
+
+								    var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
+								    var results = L.layerGroup().addTo(map);
+
+								    searchControl.on('results', function (data) {
+								      results.clearLayers();
+								      for (var i = data.results.length - 1; i >= 0; i--) {
+								        results.addLayer(L.marker(data.results[i].latlng));
+								      }
+								    });
+									$("#save").click(function(){
+							           var po = map.getCenter();
+							           $("#demo").val(po.lat + " " + po.lng);
+							           $("#save").hide();
+							           $("#map").hide();
+							           $("#lab").hide();
+							           $("#sub").show();
+							        });
+							      }    
+							  } else {
+							  	  $("#submitBtn").hide();
+							      $("#sub").show();
+								  $("#demo").val(19.19 + " " + 19.19);
+							  }
+						   });
+
+
+		                } else if (request.status <= 500){
+		                  // We reached our target server, but it returned an error
+		                  console.log("unable to geocode! Response code: " + request.status);
+		                  var data = JSON.parse(request.responseText);
+		                  console.log(data.status.message);
+		                } else {
+		                  console.log("server error");
+		                }
+		              };
+		              request.onerror = function() {
+		                // There was a connection error of some sort
+		                console.log("unable to connect to server");
+		              };
+		              request.send(); 
+					}
+					</script>
+					<script>
+					function autocomplete(inp, arr) {
+					  /*the autocomplete function takes two arguments,
+					  the text field element and an array of possible autocompleted values:*/
+					  var currentFocus;
+					  /*execute a function when someone writes in the text field:*/
+					  inp.addEventListener("input", function(e) {
+					      var a, b, i, val = this.value;
+					      /*close any already open lists of autocompleted values*/
+					      closeAllLists();
+					      if (!val) { return false;}
+					      currentFocus = -1;
+					      /*create a DIV element that will contain the items (values):*/
+					      a = document.createElement("DIV");
+					      a.setAttribute("id", this.id + "autocomplete-list");
+					      a.setAttribute("class", "autocomplete-items");
+					      /*append the DIV element as a child of the autocomplete container:*/
+					      this.parentNode.appendChild(a);
+					      /*for each item in the array...*/
+					      for (i = 0; i < arr.length; i++) {
+					        /*check if the item starts with the same letters as the text field value:*/
+					        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+					          /*create a DIV element for each matching element:*/
+					          b = document.createElement("DIV");
+					          /*make the matching letters bold:*/
+					          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+					          b.innerHTML += arr[i].substr(val.length);
+					          /*insert a input field that will hold the current array item's value:*/
+					          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+					          /*execute a function when someone clicks on the item value (DIV element):*/
+					          b.addEventListener("click", function(e) {
+					              /*insert the value for the autocomplete text field:*/
+					              inp.value = this.getElementsByTagName("input")[0].value;
+					              /*close the list of autocompleted values,
+					              (or any other open lists of autocompleted values:*/
+					              closeAllLists();
+					          });
+					          a.appendChild(b);
+					        }
+					      }
+					  });
+					  /*execute a function presses a key on the keyboard:*/
+					  inp.addEventListener("keydown", function(e) {
+					      var x = document.getElementById(this.id + "autocomplete-list");
+					      if (x) x = x.getElementsByTagName("div");
+					      if (e.keyCode == 40) {
+					        /*If the arrow DOWN key is pressed,
+					        increase the currentFocus variable:*/
+					        currentFocus++;
+					        /*and and make the current item more visible:*/
+					        addActive(x);
+					      } else if (e.keyCode == 38) { //up
+					        /*If the arrow UP key is pressed,
+					        decrease the currentFocus variable:*/
+					        currentFocus--;
+					        /*and and make the current item more visible:*/
+					        addActive(x);
+					      } else if (e.keyCode == 13) {
+					        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+					        e.preventDefault();
+					        if (currentFocus > -1) {
+					          /*and simulate a click on the "active" item:*/
+					          if (x) x[currentFocus].click();
+					        }
+					      }
+					  });
+					  function addActive(x) {
+					    /*a function to classify an item as "active":*/
+					    if (!x) return false;
+					    /*start by removing the "active" class on all items:*/
+					    removeActive(x);
+					    if (currentFocus >= x.length) currentFocus = 0;
+					    if (currentFocus < 0) currentFocus = (x.length - 1);
+					    /*add class "autocomplete-active":*/
+					    x[currentFocus].classList.add("autocomplete-active");
+					  }
+					  function removeActive(x) {
+					    /*a function to remove the "active" class from all autocomplete items:*/
+					    for (var i = 0; i < x.length; i++) {
+					      x[i].classList.remove("autocomplete-active");
+					    }
+					  }
+					  function closeAllLists(elmnt) {
+					    /*close all autocomplete lists in the document,
+					    except the one passed as an argument:*/
+					    var x = document.getElementsByClassName("autocomplete-items");
+					    for (var i = 0; i < x.length; i++) {
+					      if (elmnt != x[i] && elmnt != inp) {
+					        x[i].parentNode.removeChild(x[i]);
+					      }
+					    }
+					  }
+					  /*execute a function when someone clicks in the document:*/
+					  document.addEventListener("click", function (e) {
+					      closeAllLists(e.target);
+					  });
+					}
+
+					/*An array containing all the country names in the world:*/
+					var countries = ["Raspberry pi", "Jetson TX2", "Arduino", "Drone", "OpenCV", "C++", "Python", "Soldering", "Firmware", "MAVLINK"];
+
+					/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+					autocomplete(document.getElementById("titles"), countries);
+					autocomplete(document.getElementById("bodys"), countries);
+					autocomplete(document.getElementById("skillss"), countries);
+					autocomplete(document.getElementById("comps"), countries);
+					</script>
+	        </div>
+	    </section>
+	</main>
+	<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+{% endblock %}
